@@ -1,0 +1,21 @@
+// {
+//     "window.zoomLevel": 3,
+//     "files.autoSave": "afterDelay",
+//     "breadcrumbs.enabled": false,
+//     "python.defaultInterpreterPath": "/Users/reinaldosaraiva/workspace/riskrate-backend/.venv/bin/python",
+//     "[python]": {
+//       "editor.formatOnSave": true,
+//       "editor.codeActionsOnSave": {
+//         "source.organizeImports": true
+//       },
+//       "editor.defaultFormatter": "charliermarsh.ruff"
+//     },
+//     "python.formatting.provider": "black",
+//     "isort.args": ["--profile", "black"],
+//     "ruff.nativeServer": "on",
+//     "ruff.lineLength": 88,
+//         "python.pythonPath": "/Users/reinaldosaraiva/workspace/riskrate-backend/.venv/bin/python",
+//         "isort.interpreter": "/Users/reinaldosaraiva/workspace/riskrate-backend/.venv/bin/isort"
+      
+//   }
+  

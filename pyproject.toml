@@ -1,0 +1,92 @@
+[project]
+name = "riskrate-backend"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi[standard]>=0.112.1",
+    "sqlalchemy[asyncio]>=2.0.32",
+    "alembic>=1.13.2",
+    "pydantic-settings>=2.4.0",
+    "sqlmodel>=0.0.21",
+    "pytest>=8.3.2",
+    "isort>=5.13.2",
+    "ruff>=0.6.2",
+    "ansible-lint>=6.8.7",
+    "psycopg2>=2.9.9",
+    "psycopg2-binary>=2.9.9",
+    "sqlalchemy-utils>=0.41.2",
+    "pydantic>=2.8.2",
+    "pytest-cov>=5.0.0",
+    "black>=24.8.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.coverage.report]
+omit = ["analytix/__init__.py", "analytix/__main__.py", "analytix/types.py", "analytix/ux.py"]
+exclude_lines = [
+    "if TYPE_CHECKING:",
+    "if t.TYPE_CHECKING:",
+    "raise NotImplementedError",
+    "return NotImplemented",
+    "except KeyboardInterrupt as exc",
+    "except ImportError:",
+    # These are run depending on current Python version
+    "from dateutil.parser import parse as du_parse",
+    "du_parse = dt.datetime.fromisoformat",
+]
+
+[tool.ruff]
+show-fixes = true
+target-version = "py38"
+
+[tool.ruff.lint]
+extend-select = [
+    "B",
+    "BLE",
+    "C4",
+    "COM",
+    # "CPY",
+    "E",
+    "ERA",
+    "FBT",
+    "FLY",
+    "G",
+    "I",
+    "ICN",
+    "INP",
+    "ISC",
+    "LOG",
+    "N",
+    "NPY",
+    "PERF",
+    "PGH",
+    "PIE",
+    # "PTH",
+    "PYI",
+    "Q",
+    "RET",
+    "RSE",
+    "RUF",
+    "S",
+    "SIM",
+    "SLF",
+    "SLOT",
+    "T10",
+    "T20",
+    "TCH",
+    "TID",
+    "UP",
+    "YTT",
+]
+ignore = ["E402", "B905", "N818", "S101"]
+
+[tool.ruff.lint.isort]
+force-single-line = true
+
+[tool.pytest.ini_options]
+addopts = "--cov=src --cov-report=term-missing"

@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15
+    container_name: riskrate-postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: riskrate_dev
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  # web:
+  #   build: .
+  #   container_name: riskrate-backend
+  #   command: uvicorn riskrate_backend.main:app --reload --host 0.0.0.0 --port 8000
+  #   ports:
+  #     - "8000:8000"
+  #   volumes:
+  #     - .:/app
+  #   environment:
+  #     DATABASE_URL: postgres://postgres:postgres@db:5432/riskrate_dev
+  #   depends_on:
+  #     - db
+
+volumes:
+  postgres_data:
