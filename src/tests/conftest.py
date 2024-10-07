@@ -6,7 +6,7 @@ from sqlalchemy_utils import database_exists
 from sqlalchemy_utils import drop_database
 
 from riskrate_backend.core.config import settings
-from riskrate_backend.model.models import Base
+from riskrate_backend.model.base import Base
 
 
 @pytest.fixture(scope="session")

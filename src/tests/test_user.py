@@ -2,11 +2,11 @@ import pytest
 from riskrate_backend.model.models import (
     CloudType,
     User,
-    Role,
     License,
-    Company,
     CloudAccess,
 )
+from riskrate_backend.model.base import Role
+from riskrate_backend.model.companies Company
 
 
 @pytest.fixture

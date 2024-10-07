@@ -1,6 +1,6 @@
 import pytest
 
-from riskrate_backend.model.models import Address
+from riskrate_backend.model.base import Address
 
 
 @pytest.fixture

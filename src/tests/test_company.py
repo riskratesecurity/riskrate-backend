@@ -1,6 +1,6 @@
 import pytest
 
-from riskrate_backend.model.models import Company
+from riskrate_backend.model.companies import Company
 
 
 @pytest.fixture

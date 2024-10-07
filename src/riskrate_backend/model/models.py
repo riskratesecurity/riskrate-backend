@@ -15,45 +15,12 @@ from sqlalchemy.orm import declarative_base
 from sqlalchemy.orm import mapped_column
 from sqlalchemy.orm import relationship
 
-Base = declarative_base()
-
-
-class BaseMixin:
-    id: Mapped[uuid.UUID] = mapped_column(
-        PostgresUUID(as_uuid=True), primary_key=True, default=uuid.uuid4
-    )
-    created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), default=func.now()
-    )
-    updated_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), default=func.now(), onupdate=func.now()
-    )
-
-
-class CloudType(PyEnum):
-    aws = "aws"
-    gcp = "gcp"
-    azure = "azure"
-
-
-class Role(Base, BaseMixin):
-    __tablename__ = "roles"
-
-    name: Mapped[str] = mapped_column(String(255), nullable=False)
-    description: Mapped[str] = mapped_column(String, nullable=True)
-    users: Mapped[list["User"]] = relationship("User", back_populates="role")
-
-
-class License(Base, BaseMixin):
-    __tablename__ = "licenses"
-
-    code: Mapped[str] = mapped_column(String(255))
-    name: Mapped[str] = mapped_column(String(255))
-    description: Mapped[str] = mapped_column(String)
-    duration: Mapped[int] = mapped_column(Integer)
-    features: Mapped[dict] = mapped_column(JSON)
-
-    users: Mapped[list["User"]] = relationship("User", back_populates="license")
+from base import Base
+from base import BaseMixin
+from base import Role
+from base import Partner
+from base import Campaign
+from base import Address
 
 
 class User(Base, BaseMixin):
@@ -109,6 +76,31 @@ class User(Base, BaseMixin):
     )
 
 
+class UserMetric(Base, BaseMixin):
+    __tablename__ = "user_metrics"
+
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
+    user: Mapped["User"] = relationship("User", back_populates="user_metrics")
+
+
+class License(Base, BaseMixin):
+    __tablename__ = "licenses"
+
+    code: Mapped[str] = mapped_column(String(255))
+    name: Mapped[str] = mapped_column(String(255))
+    description: Mapped[str] = mapped_column(String)
+    duration: Mapped[int] = mapped_column(Integer)
+    features: Mapped[dict] = mapped_column(JSON)
+
+    users: Mapped[list["User"]] = relationship("User", back_populates="license")
+
+
+class CloudType(PyEnum):
+    aws = "aws"
+    gcp = "gcp"
+    azure = "azure"
+
+
 class CloudAccess(Base, BaseMixin):
     __tablename__ = "cloud_accesses"
 
@@ -128,107 +120,6 @@ class CloudAccess(Base, BaseMixin):
     )
 
 
-class Partner(Base, BaseMixin):
-    __tablename__ = "partners"
-
-    user_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("users.id"))
-    user: Mapped["User"] = relationship("User", back_populates="partners")
-
-
-class Campaign(Base, BaseMixin):
-    __tablename__ = "campaigns"
-
-    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
-    user: Mapped["User"] = relationship("User", back_populates="campaigns")
-
-
-class UserMetric(Base, BaseMixin):
-    __tablename__ = "user_metrics"
-
-    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
-    user: Mapped["User"] = relationship("User", back_populates="user_metrics")
-
-
-class Company(Base, BaseMixin):
-    __tablename__ = "companies"
-
-    name: Mapped[str] = mapped_column(String(255), nullable=False)
-    registration: Mapped[str] = mapped_column(String(255), nullable=False)
-    addresses: Mapped[list["AddressCompany"]] = relationship(
-        "AddressCompany", back_populates="company"
-    )
-    company_users: Mapped[list["CompanyUser"]] = relationship(
-        "CompanyUser", back_populates="company"
-    )
-
-
-class Address(Base, BaseMixin):
-    __tablename__ = "addresses"
-
-    postcode: Mapped[str] = mapped_column(String(255), nullable=False)
-    street: Mapped[str] = mapped_column(String(255), nullable=False)
-    number: Mapped[str] = mapped_column(String(255), nullable=False)
-    complement: Mapped[str] = mapped_column(String(255))
-    neighborhood: Mapped[str] = mapped_column(String(255), nullable=False)
-    city: Mapped[str] = mapped_column(String(255), nullable=False)
-    state: Mapped[str] = mapped_column(String(255), nullable=False)
-    country: Mapped[str] = mapped_column(String(255), nullable=False)
-
-
-class AddressCompany(Base, BaseMixin):
-    __tablename__ = "address_companies"
-
-    address_id: Mapped[int] = mapped_column(ForeignKey("addresses.id"))
-    company_id: Mapped[int] = mapped_column(ForeignKey("companies.id"))
-
-    address: Mapped["Address"] = relationship("Address")
-    company: Mapped["Company"] = relationship("Company", back_populates="addresses")
-
-
-class DocumentAssign(Base, BaseMixin):
-    __tablename__ = "document_assigns"
-
-    document_id: Mapped[int] = mapped_column(ForeignKey("assignment_documents.id"))
-    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
-
-    document_assignment: Mapped["AssignmentDocument"] = relationship(
-        "AssignmentDocument", back_populates="assigns"
-    )
-    user: Mapped["User"] = relationship("User", back_populates="document_assigns")
-
-
-class AssignmentDocument(Base, BaseMixin):
-    __tablename__ = "assignment_documents"
-
-    code: Mapped[str] = mapped_column(String(255))
-    document_slug: Mapped[str] = mapped_column(String(255))
-    document_id: Mapped[int] = mapped_column(Integer)
-    source: Mapped[str] = mapped_column(String(255))
-    assigns: Mapped[list["DocumentAssign"]] = relationship(
-        "DocumentAssign", back_populates="document_assignment"
-    )
-    requests: Mapped[list["AssignmentDocumentRequest"]] = relationship(
-        "AssignmentDocumentRequest", back_populates="document_assignment"
-    )
-
-
-class AssignmentDocumentRequest(Base, BaseMixin):
-    __tablename__ = "assignment_document_requests"
-
-    document_assignment_id: Mapped[int] = mapped_column(
-        ForeignKey("assignment_documents.id")
-    )
-    status: Mapped[str] = mapped_column(String(255))
-    send_to: Mapped[str] = mapped_column(String(255))
-    send_to_data: Mapped[dict] = mapped_column(JSON)
-    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
-
-    document_assignment: Mapped["AssignmentDocument"] = relationship(
-        "AssignmentDocument", back_populates="requests"
-    )
-    user: Mapped["User"] = relationship("User")
-
-
 class CloudReport(Base, BaseMixin):
     __tablename__ = "cloud_reports"
 
@@ -242,13 +133,3 @@ class CloudReport(Base, BaseMixin):
     cloud_access: Mapped["CloudAccess"] = relationship(
         "CloudAccess", back_populates="reports"
     )
-
-
-class CompanyUser(Base, BaseMixin):
-    __tablename__ = "company_users"
-
-    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
-    company_id: Mapped[int] = mapped_column(ForeignKey("companies.id"))
-
-    user: Mapped["User"] = relationship("User", back_populates="companies")
-    company: Mapped["Company"] = relationship("Company", back_populates="company_users")

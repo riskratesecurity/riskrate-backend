@@ -5,7 +5,7 @@ from sqlalchemy import pool
 
 from alembic import context
 from riskrate_backend.core.config import settings
-from riskrate_backend.model.models import Base
+from riskrate_backend.model.base import Base
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
