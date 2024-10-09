@@ -2,6 +2,8 @@ import uuid
 from datetime import datetime
 from enum import Enum as PyEnum
 
+from typing import List
+
 from sqlalchemy import JSON
 from sqlalchemy import DateTime
 from sqlalchemy import Enum
@@ -36,7 +38,7 @@ class Role(Base, BaseMixin):
 
     name: Mapped[str] = mapped_column(String(255), nullable=False)
     description: Mapped[str] = mapped_column(String, nullable=True)
-    users: Mapped[list["User"]] = relationship("User", back_populates="role")
+    users: Mapped[List["User"]] = relationship("User", back_populates="role")
 
 
 class Partner(Base, BaseMixin):

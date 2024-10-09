@@ -1,9 +1,12 @@
+from typing_extensions import Annotated
 from datetime import datetime
 from uuid import UUID, uuid4
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
 
 from riskrate_backend.schemas.address import Address, AddressCreate, AddressUpdate
+from riskrate_backend.core.auth.token_provider import get_current_user
+from riskrate_backend.model.models import User
 
 router = APIRouter()
 
@@ -22,6 +25,9 @@ def create_address(address: AddressCreate):
     addresses.append(new_address)
     return new_address
 
+@router.get("/user/me")
+async def get_users_me(current_user: Annotated[User, Depends(get_current_user)]):
+    return current_user
 
 @router.get("/{address_id}", response_model=Address)
 def get_address(address_id: UUID):

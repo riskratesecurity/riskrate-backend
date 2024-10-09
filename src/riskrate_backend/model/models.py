@@ -2,6 +2,8 @@ import uuid
 from datetime import datetime
 from enum import Enum as PyEnum
 
+from typing import List
+
 from sqlalchemy import JSON
 from sqlalchemy import DateTime
 from sqlalchemy import Enum
@@ -15,13 +17,7 @@ from sqlalchemy.orm import declarative_base
 from sqlalchemy.orm import mapped_column
 from sqlalchemy.orm import relationship
 
-from base import Base
-from base import BaseMixin
-from base import Role
-from base import Partner
-from base import Campaign
-from base import Address
-
+from riskrate_backend.model.base import Base, BaseMixin, Role, Partner, Campaign, Address
 
 class User(Base, BaseMixin):
     __tablename__ = "users"
@@ -48,23 +44,23 @@ class User(Base, BaseMixin):
     role: Mapped["Role"] = relationship("Role", back_populates="users")
     license: Mapped["License"] = relationship("License", back_populates="users")
 
-    partners: Mapped[list["Partner"]] = relationship("Partner", back_populates="user")
-    campaigns: Mapped[list["Campaign"]] = relationship(
+    partners: Mapped[List["Partner"]] = relationship("Partner", back_populates="user")
+    campaigns: Mapped[List["Campaign"]] = relationship(
         "Campaign", back_populates="user"
     )
-    user_metrics: Mapped[list["UserMetric"]] = relationship(
+    user_metrics: Mapped[List["UserMetric"]] = relationship(
         "UserMetric", back_populates="user"
     )
-    document_assigns: Mapped[list["DocumentAssign"]] = relationship(
+    document_assigns: Mapped[List["DocumentAssign"]] = relationship(
         "DocumentAssign", back_populates="user"
     )
-    companies: Mapped[list["CompanyUser"]] = relationship(
+    companies: Mapped[List["CompanyUser"]] = relationship(
         "CompanyUser", back_populates="user"
     )
-    cloud_accesses: Mapped[list["CloudAccess"]] = relationship(
+    cloud_accesses: Mapped[List["CloudAccess"]] = relationship(
         "CloudAccess", back_populates="user"
     )
-    cloud_reports: Mapped[list["CloudReport"]] = relationship(
+    cloud_reports: Mapped[List["CloudReport"]] = relationship(
         "CloudReport", back_populates="user"
     )
 
@@ -92,7 +88,7 @@ class License(Base, BaseMixin):
     duration: Mapped[int] = mapped_column(Integer)
     features: Mapped[dict] = mapped_column(JSON)
 
-    users: Mapped[list["User"]] = relationship("User", back_populates="license")
+    users: Mapped[List["User"]] = relationship("User", back_populates="license")
 
 
 class CloudType(PyEnum):
@@ -115,7 +111,7 @@ class CloudAccess(Base, BaseMixin):
 
     # Relacionamentos
     user: Mapped["User"] = relationship("User", back_populates="cloud_accesses")
-    reports: Mapped[list["CloudReport"]] = relationship(
+    reports: Mapped[List["CloudReport"]] = relationship(
         "CloudReport", back_populates="cloud_access"
     )
 
