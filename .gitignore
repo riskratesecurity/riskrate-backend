@@ -41,6 +41,8 @@ MANIFEST
 *.manifest
 *.spec
 
+.vscode/
+
 # Installer logs
 pip-log.txt
 pip-delete-this-directory.txt
@@ -65,3 +67,4 @@ coverage.xml
 .pytest_cache/
 .pytest_cache/
 .cache/
+.mypy_cache/

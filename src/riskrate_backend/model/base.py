@@ -1,14 +1,11 @@
 import uuid
 from datetime import datetime
-from enum import Enum as PyEnum
 
-from typing import List
+from typing import List, Union
 
-from sqlalchemy import JSON
+from pydantic import BaseModel
 from sqlalchemy import DateTime
-from sqlalchemy import Enum
 from sqlalchemy import ForeignKey
-from sqlalchemy import Integer
 from sqlalchemy import String
 from sqlalchemy import func
 from sqlalchemy.dialects.postgresql import UUID as PostgresUUID
@@ -31,6 +28,15 @@ class BaseMixin:
     updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=func.now(), onupdate=func.now()
     )
+
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+
+
+class TokenData(BaseModel):
+    username: Union[str, None] = None
 
 
 class Role(Base, BaseMixin):

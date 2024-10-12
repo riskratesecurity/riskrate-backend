@@ -13,11 +13,10 @@ from sqlalchemy import String
 from sqlalchemy import func
 from sqlalchemy.dialects.postgresql import UUID as PostgresUUID
 from sqlalchemy.orm import Mapped
-from sqlalchemy.orm import declarative_base
 from sqlalchemy.orm import mapped_column
 from sqlalchemy.orm import relationship
 
-from riskrate_backend.model.base import Base, BaseMixin, Role, Partner, Campaign, Address
+from riskrate_backend.model.base import Base, BaseMixin, Role, Partner, Campaign
 
 class User(Base, BaseMixin):
     __tablename__ = "users"
