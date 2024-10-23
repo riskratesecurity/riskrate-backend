@@ -10,6 +10,7 @@ class GptModelService:
     def generate_text(self, questions: str) -> dict:
         response = self.__model(self).chat.completions.create(
             model="gpt-4o-mini",
+            # model="gpt-3.5-turbo-1106",
             response_format={
                 "type": "json_schema",
                 "json_schema": {
@@ -63,6 +64,7 @@ class GptModelService:
             max_tokens=900,
         )
         return self.__response_to_json(response)
+        return response
 
     @classmethod
     def __response_to_json(self, response) -> dict:
