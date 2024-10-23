@@ -9,6 +9,8 @@ from fastapi.security import OAuth2PasswordBearer
 from riskrate_backend.core.auth.hash_provider import verify_password
 from riskrate_backend.model.base import TokenData
 from riskrate_backend.model.models import User
+from riskrate_backend.core.database import SessionLocal
+from sqlalchemy import select
 
 SECRET_KEY = "40281381149b7f7910cd376611d27805af279b53ec7d3b1e7c28fab2fb47c8c2"
 ALGORITHM = "HS256"
@@ -16,7 +18,7 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
-
+session = SessionLocal()
 
 async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
     credentials_exception = HTTPException(
@@ -35,7 +37,7 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
     except InvalidTokenError:
         raise credentials_exception
 
-    user = User.get(username=token_data.username)
+    user = get_user(username=token_data.username)
 
     if user is None:
         raise credentials_exception
@@ -43,7 +45,8 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
 
 
 def authenticate_user(username: str, password: str):
-    user = User.get(username)
+    user = get_user(username)
+
     if not user:
         return False
     if not verify_password(password, user.hashed_password):
@@ -59,3 +62,8 @@ def create_access_token(data: dict, expires_delta: Union[timedelta, None] = None
 
     jwt_encoded = jwt.encode(json_dados, SECRET_KEY, algorithm=ALGORITHM)
     return jwt_encoded
+
+def get_user(username):
+    stmt = select(User).where(User.email == username)
+    result = session.execute(stmt)
+    return result.scalars().first()
