@@ -10,7 +10,6 @@ from riskrate_backend.core.auth.hash_provider import verify_password
 from riskrate_backend.model.base import TokenData
 from riskrate_backend.model.models import User
 from riskrate_backend.core.database import SessionLocal
-from sqlalchemy import select
 
 SECRET_KEY = "40281381149b7f7910cd376611d27805af279b53ec7d3b1e7c28fab2fb47c8c2"
 ALGORITHM = "HS256"
@@ -64,6 +63,4 @@ def create_access_token(data: dict, expires_delta: Union[timedelta, None] = None
     return jwt_encoded
 
 def get_user(username):
-    stmt = select(User).where(User.email == username)
-    result = session.execute(stmt)
-    return result.scalars().first()
+    return session.query(User).filter_by(email=username).first()
