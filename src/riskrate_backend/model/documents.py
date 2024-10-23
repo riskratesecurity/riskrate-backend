@@ -1,13 +1,9 @@
-from sqlalchemy import JSON
-from sqlalchemy import ForeignKey
-from sqlalchemy import Integer
-from sqlalchemy import String
-from sqlalchemy.orm import Mapped
-from sqlalchemy.orm import mapped_column
-from sqlalchemy.orm import relationship
+from sqlalchemy import JSON, ForeignKey, Integer, String
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from base import Base
-from base import BaseMixin
+from typing import List
+
+from riskrate_backend.model.base import Base, BaseMixin
 
 
 class DocumentAssign(Base, BaseMixin):
@@ -29,10 +25,10 @@ class AssignmentDocument(Base, BaseMixin):
     document_slug: Mapped[str] = mapped_column(String(255))
     document_id: Mapped[int] = mapped_column(Integer)
     source: Mapped[str] = mapped_column(String(255))
-    assigns: Mapped[list["DocumentAssign"]] = relationship(
+    assigns: Mapped[List["DocumentAssign"]] = relationship(
         "DocumentAssign", back_populates="document_assignment"
     )
-    requests: Mapped[list["AssignmentDocumentRequest"]] = relationship(
+    requests: Mapped[List["AssignmentDocumentRequest"]] = relationship(
         "AssignmentDocumentRequest", back_populates="document_assignment"
     )
 

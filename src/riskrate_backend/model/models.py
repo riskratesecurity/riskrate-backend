@@ -17,6 +17,8 @@ from sqlalchemy.orm import mapped_column
 from sqlalchemy.orm import relationship
 
 from riskrate_backend.model.base import Base, BaseMixin, Role, Partner, Campaign
+from riskrate_backend.model.documents import DocumentAssign
+from riskrate_backend.model.companies import CompanyUser
 
 class User(Base, BaseMixin):
     __tablename__ = "users"

@@ -1,3 +1,5 @@
+from typing import List
+
 from sqlalchemy import JSON
 from sqlalchemy import ForeignKey
 from sqlalchemy import Integer
@@ -6,22 +8,17 @@ from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
 from sqlalchemy.orm import relationship
 
-from base import Base
-from base import BaseMixin
-from base import Address
-from base import Company
-from models import User
-
+from riskrate_backend.model.base import Base, BaseMixin, Address
 
 class Company(Base, BaseMixin):
     __tablename__ = "companies"
 
     name: Mapped[str] = mapped_column(String(255), nullable=False)
     registration: Mapped[str] = mapped_column(String(255), nullable=False)
-    addresses: Mapped[list["AddressCompany"]] = relationship(
+    addresses: Mapped[List["AddressCompany"]] = relationship(
         "AddressCompany", back_populates="company"
     )
-    company_users: Mapped[list["CompanyUser"]] = relationship(
+    company_users: Mapped[List["CompanyUser"]] = relationship(
         "CompanyUser", back_populates="company"
     )
 
